@@ -11,6 +11,13 @@ repositories {
 }
 
 apply plugin: 'java'
+apply plugin: 'com.novoda.bintray-release'
+
+//def setArtifactId() {
+//    artifactId = 'cli'
+//}
+//
+//setArtifactId()
 //apply plugin: 'application'
 
 sourceCompatibility = 1.7
@@ -46,4 +53,15 @@ task distJar(type: Copy, dependsOn: fatJar) {
 }
 
 // apply from: '../jar.gradle'
-apply from: '../gradle-mvn-push.gradle'
+//apply from: '../gradle-mvn-push.gradle'
+//apply from: '../bintray.gradle'
+publish {
+    artifactId = 'cli'
+    userOrg = rootProject.userOrg
+    groupId = rootProject.groupId
+    uploadName = rootProject.uploadName
+    publishVersion = rootProject.publishVersion
+    desc = rootProject.description
+    website = rootProject.website
+    licences = rootProject.licences
+}

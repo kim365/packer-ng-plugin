@@ -11,6 +11,13 @@ repositories {
 }
 
 apply plugin: 'java'
+apply plugin: 'com.novoda.bintray-release'
+
+//def setArtifactId() {
+//    artifactId = 'common'
+//}
+//
+//setArtifactId()
 
 sourceCompatibility = 1.7
 targetCompatibility = 1.7
@@ -34,4 +41,15 @@ javadoc {
 
 
 
-apply from: '../gradle-mvn-push.gradle'
+//apply from: '../gradle-mvn-push.gradle'
+//apply from: '../bintray.gradle'
+publish {
+    artifactId = 'common'
+    userOrg = rootProject.userOrg
+    groupId = rootProject.groupId
+    uploadName = rootProject.uploadName
+    publishVersion = rootProject.publishVersion
+    desc = rootProject.description
+    website = rootProject.website
+    licences = rootProject.licences
+}

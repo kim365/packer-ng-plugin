@@ -1,5 +1,6 @@
 package com.mcxiaoke.packer.common;
 
+import com.mcxiaoke.packer.support.walle.AES;
 import com.mcxiaoke.packer.support.walle.Support;
 
 import java.io.File;
@@ -48,6 +49,14 @@ public class PackerCommon {
         if (map == null || map.isEmpty()) {
             return null;
         }
+        if (map.containsKey("isSuccess") &&
+                map.get("isSuccess").equals("true")) {
+            // 加密成功则解密,解密返回值为空则返回原值
+            String value = AES.decrypt(map.get(key));
+            if (value != null) {
+                return value;
+            }
+        }
         return map.get(key);
     }
 
@@ -58,7 +67,16 @@ public class PackerCommon {
                            int blockId)
             throws IOException {
         final Map<String, String> values = new HashMap<>();
-        values.put(key, value);
+        // 添加渠道value加密
+        String newValue = AES.encrypt(value);
+        String isSuccess = "true";
+        if (newValue == null) {
+            // 为空表示失败
+            newValue = value;
+            isSuccess = "false";
+        }
+        values.put(key, newValue);
+        values.put("isSuccess", isSuccess);
         writeValues(file, values, blockId);
     }
 

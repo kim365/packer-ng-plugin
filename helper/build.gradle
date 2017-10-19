@@ -12,6 +12,7 @@ repositories {
 }
 
 apply plugin: 'com.android.library'
+apply plugin: 'com.novoda.bintray-release'
 
 dependencies {
     compile project(":common")
@@ -40,4 +41,16 @@ android {
         htmlReport true
     }
 }
-apply from: '../gradle-mvn-push.gradle'
+//apply from: '../gradle-mvn-push.gradle'
+//apply from: '../bintray.gradle'
+
+publish {
+    artifactId = 'helper'
+    userOrg = rootProject.userOrg
+    groupId = rootProject.groupId
+    uploadName = rootProject.uploadName
+    publishVersion = rootProject.publishVersion
+    desc = rootProject.description
+    website = rootProject.website
+    licences = rootProject.licences
+}

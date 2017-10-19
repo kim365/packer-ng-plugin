@@ -7,6 +7,7 @@ buildscript {
 }
 
 apply plugin: 'groovy'
+apply plugin: 'com.novoda.bintray-release'
 
 sourceCompatibility = 1.7
 targetCompatibility = 1.7
@@ -30,5 +31,16 @@ dependencies {
     compile 'com.android.tools.build:apksig:2.3.0'
 }
 
-apply from: '../gradle-mvn-push.gradle'
+//apply from: '../gradle-mvn-push.gradle'
+//apply from: '../bintray.gradle'
+publish {
+    artifactId = 'plugin'
+    userOrg = rootProject.userOrg
+    groupId = rootProject.groupId
+    uploadName = rootProject.uploadName
+    publishVersion = rootProject.publishVersion
+    desc = rootProject.description
+    website = rootProject.website
+    licences = rootProject.licences
+}
 

@@ -3,7 +3,24 @@ ext {
     buildToolsVersion = "25.0.3"
     minSdkVersion = 14
     targetSdkVersion = 22
+    artifactId = 'plugin'
+    userOrg = 'iceblue'
+    groupId = 'com.iiceblue.packer-ng'
+    uploadName = 'packer-ng'
+    publishVersion = '2.0.2'
+    desc = 'Next Generation Android Multi Packer Gradle Plugin '
+    website = 'https://github.com/kim365/packer-ng-plugin'
+    licences = ['Apache-2.0']
 }
 
 group = GROUP
 version = VERSION_NAME
+
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.novoda:bintray-release:0.5.0'
+    }
+}
