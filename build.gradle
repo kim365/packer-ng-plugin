@@ -4,10 +4,10 @@ ext {
     minSdkVersion = 14
     targetSdkVersion = 22
     artifactId = 'plugin'
-    userOrg = 'iceblue'
-    groupId = 'com.iiceblue.packer-ng'
+    userOrg = 'blue'
+    groupId = 'com.blue.packer-ng'
     uploadName = 'packer-ng'
-    publishVersion = '2.0.2'
+    publishVersion = '2.0.1'
     desc = 'Next Generation Android Multi Packer Gradle Plugin '
     website = 'https://github.com/kim365/packer-ng-plugin'
     licences = ['Apache-2.0']
