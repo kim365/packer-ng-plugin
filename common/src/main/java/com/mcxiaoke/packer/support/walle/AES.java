@@ -10,6 +10,7 @@ import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.KeyGenerator;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
+import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
 /**
@@ -22,21 +23,29 @@ import javax.crypto.spec.SecretKeySpec;
  * Modify Describe：
  */
 public class AES {
-    private static final String strDefaultKey = "national";
+    /** 填充模式 */
+    private static final String transformation = "AES/CBC/PKCS5Padding";
+    private static final String strDefaultKey = "aPdhXIeIDwMguV8N";
     /**
-     * AES 加密
+     * 加密
      *
-     * @param seed      密钥
-     * @param cleartext 明文
-     * @return 密文
+     * @param content 需要加密的内容
+     * @param password 加密密码
+     * @return
      */
-    public static String encrypt(String seed, String cleartext) {
-        //对密钥进行加密
-        byte[] rawkey = getRawKey(seed.getBytes());
-        //加密数据
-        byte[] result = encrypt(rawkey, cleartext.getBytes());
-        //将十进制数转换为十六进制数
-        return toHex(result);
+    public static String encrypt(String password, String content) {
+        try {
+            IvParameterSpec zeroIv = new IvParameterSpec(password.getBytes());
+            SecretKeySpec key1 = new SecretKeySpec(password.getBytes(),"AES");
+            Cipher cipher = Cipher.getInstance(transformation);
+            cipher.init(Cipher.ENCRYPT_MODE, key1, zeroIv);
+            byte[] encryptedData = cipher.doFinal(content.getBytes());
+            String encryptResultStr = parseByte2HexStr(encryptedData);
+            return encryptResultStr;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     /**
@@ -49,19 +58,27 @@ public class AES {
         return encrypt(strDefaultKey, cleartext);
     }
 
-
     /**
-     * AES 解密
+     * 解密
      *
-     * @param seed      密钥
-     * @param encrypted 密文
-     * @return 明文
+     * @param content 待解密内容
+     * @param password 解密密钥
+     * @return
      */
-    public static String decrypt(String seed, String encrypted) {
-        byte[] rawKey = getRawKey(seed.getBytes());
-        byte[] enc = toByte(encrypted);
-        byte[] result = decrypt(rawKey, enc);
-        return new String(result);
+    public static String decrypt(String password, String content) {
+        try {
+
+            byte[] decryptFrom = parseHexStr2Byte(content);
+            IvParameterSpec zeroIv = new IvParameterSpec(password.getBytes());
+            SecretKeySpec key1 = new SecretKeySpec(password.getBytes(),"AES");
+            Cipher cipher = Cipher.getInstance(transformation);
+            cipher.init(Cipher.DECRYPT_MODE, key1, zeroIv);
+            byte decryptedData[] = cipher.doFinal(decryptFrom);
+            return new String(decryptedData);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     /**
@@ -74,119 +91,35 @@ public class AES {
         return decrypt(strDefaultKey, encrypted);
     }
 
-
-    private static byte[] getRawKey(byte[] seed) {
-
-        try {
-            //获取密钥生成器
-            KeyGenerator kgen = KeyGenerator.getInstance("AES");
-            SecureRandom sr = SecureRandom.getInstance("SHA1PRNG");
-            sr.setSeed(seed);
-            //生成位的AES密码生成器
-            kgen.init(128, sr);
-            //生成密钥
-            SecretKey skey = kgen.generateKey();
-            //编码格式
-            byte[] raw = skey.getEncoded();
-            return raw;
-
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
+    /**将二进制转换成16进制
+     * @param buf
+     * @return
+     */
+    public static String parseByte2HexStr(byte buf[]) {
+        StringBuffer sb = new StringBuffer();
+        for (int i = 0; i < buf.length; i++) {
+            String hex = Integer.toHexString(buf[i] & 0xFF);
+            if (hex.length() == 1) {
+                hex = '0' + hex;
+            }
+            sb.append(hex.toUpperCase());
         }
-        return null;
-
+        return sb.toString();
     }
 
-
-    private static byte[] encrypt(byte[] raw, byte[] clear) {
-
-        try {
-            //生成一系列扩展密钥，并放入一个数组中
-            SecretKeySpec skeySpec = new SecretKeySpec(raw, "AES");
-            Cipher cipher = Cipher.getInstance("AES");
-            //使用ENCRYPT_MODE模式，用skeySpec密码组，生成AES加密方法
-            cipher.init(Cipher.ENCRYPT_MODE, skeySpec);
-            //得到加密数据
-            byte[] encrypted = cipher.doFinal(clear);
-            return encrypted;
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (NoSuchPaddingException e) {
-            e.printStackTrace();
-        } catch (InvalidKeyException e) {
-            e.printStackTrace();
-        } catch (BadPaddingException e) {
-            e.printStackTrace();
-        } catch (IllegalBlockSizeException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    private static byte[] decrypt(byte[] raw, byte[] encrypted) {
-
-        try {
-            //生成一系列扩展密钥，并放入一个数组中
-            SecretKeySpec skeySpec = new SecretKeySpec(raw, "AES");
-            Cipher cipher = null;
-            cipher = Cipher.getInstance("AES");
-            //使用DECRYPT_MODE模式，用skeySpec密码组，生成AES解密方法
-            cipher.init(Cipher.DECRYPT_MODE, skeySpec);
-            //得到加密数据
-            byte[] decrypted = cipher.doFinal(encrypted);
-            return decrypted;
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (NoSuchPaddingException e) {
-            e.printStackTrace();
-        } catch (BadPaddingException e) {
-            e.printStackTrace();
-        } catch (IllegalBlockSizeException e) {
-            e.printStackTrace();
-        } catch (InvalidKeyException e) {
-            e.printStackTrace();
-        }
-        return null;
-
-    }
-
-
-    //将十进制数转为十六进制
-    public static String toHex(String txt) {
-        return toHex(txt.getBytes());
-    }
-
-    //将十六进制字符串转换位十进制字符串
-    public static String fromHex(String hex) {
-        return new String(toByte(hex));
-    }
-
-    //将十六进制字符串转为十进制字节数组
-    public static byte[] toByte(String hexString) {
-        int len = hexString.length() / 2;
-        byte[] result = new byte[len];
-        for (int i = 0; i < len; i++) {
-            result[i] = Integer.valueOf(hexString.substring(2 * i, 2 * i + 2), 16).byteValue();
+    /**将16进制转换为二进制
+     * @param hexStr
+     * @return
+     */
+    public static byte[] parseHexStr2Byte(String hexStr) {
+        if (hexStr.length() < 1)
+            return null;
+        byte[] result = new byte[hexStr.length()/2];
+        for (int i = 0;i< hexStr.length()/2; i++) {
+            int high = Integer.parseInt(hexStr.substring(i*2, i*2+1), 16);
+            int low = Integer.parseInt(hexStr.substring(i*2+1, i*2+2), 16);
+            result[i] = (byte) (high * 16 + low);
         }
         return result;
-    }
-
-    //将十进制字节数组转换为十六进制
-    public static String toHex(byte[]buf){
-        if(buf==null){
-            return "";
-        }
-        StringBuffer result=new StringBuffer(2*buf.length);
-        for(int i=0;i<buf.length;i++){
-            appendHex(result,buf[i]);
-        }
-        return result.toString();
-    }
-
-
-    private final static String HEX="0123456789ABCDEF";
-
-    private static void appendHex(StringBuffer sb,byte b){
-        sb.append(HEX.charAt((b>>4)&0x0f)).append(HEX.charAt(b&0x0f));
     }
 }

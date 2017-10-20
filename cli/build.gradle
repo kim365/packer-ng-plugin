@@ -53,7 +53,7 @@ task distJar(type: Copy, dependsOn: fatJar) {
 }
 
 // apply from: '../jar.gradle'
-//apply from: '../gradle-mvn-push.gradle'
+apply from: '../gradle-mvn-push.gradle'
 //apply from: '../bintray.gradle'
 publish {
     artifactId = 'cli'

@@ -41,7 +41,7 @@ javadoc {
 
 
 
-//apply from: '../gradle-mvn-push.gradle'
+apply from: '../gradle-mvn-push.gradle'
 //apply from: '../bintray.gradle'
 publish {
     artifactId = 'common'
