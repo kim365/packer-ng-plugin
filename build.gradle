@@ -1,8 +1,8 @@
 ext {
-    compileSdkVersion = 25
-    buildToolsVersion = "25.0.3"
+    compileSdkVersion = 27
+    buildToolsVersion = "27.0.3"
     minSdkVersion = 14
-    targetSdkVersion = 22
+    targetSdkVersion = 26
     artifactId = 'plugin'
     userOrg = 'blue'
     groupId = 'com.blue.packer-ng'

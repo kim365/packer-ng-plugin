@@ -1,21 +1,14 @@
-buildscript {
-    repositories {
-        jcenter()
-    }
-    dependencies {
-        classpath "com.android.tools.build:gradle:2.2.2"
-    }
-}
-
 repositories {
+    mavenCentral()
     jcenter()
+    google()
 }
 
 apply plugin: 'com.android.library'
 apply plugin: 'com.novoda.bintray-release'
 
 dependencies {
-    compile project(":common")
+    implementation project(":common")
 }
 
 android {

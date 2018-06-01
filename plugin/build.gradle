@@ -1,11 +1,3 @@
-buildscript {
-    repositories {
-        jcenter()
-    }
-    dependencies {
-    }
-}
-
 apply plugin: 'groovy'
 apply plugin: 'com.novoda.bintray-release'
 
@@ -19,7 +11,9 @@ buildscript {
 }
 
 repositories {
-    jcenter()
+        mavenCentral()
+        jcenter()
+        google()
 }
 
 dependencies {
@@ -27,8 +21,8 @@ dependencies {
     compile gradleApi()
     compile project(':common')
     compile project(':cli')
-    compile 'com.android.tools.build:gradle:2.2.2'
-    compile 'com.android.tools.build:apksig:2.3.0'
+    compile 'com.android.tools.build:gradle:2.3.3'
+    compile 'com.android.tools.build:apksig:2.3.3'
 }
 
 apply from: '../gradle-mvn-push.gradle'
