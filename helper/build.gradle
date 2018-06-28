@@ -1,9 +1,3 @@
-repositories {
-    mavenCentral()
-    jcenter()
-    google()
-}
-
 apply plugin: 'com.android.library'
 apply plugin: 'com.novoda.bintray-release'
 
@@ -30,11 +24,12 @@ android {
     }
 
     lintOptions {
+        checkReleaseBuilds false
         abortOnError false
         htmlReport true
     }
 }
-apply from: '../gradle-mvn-push.gradle'
+//apply from: '../gradle-mvn-push.gradle'
 //apply from: '../bintray.gradle'
 
 publish {
@@ -43,7 +38,7 @@ publish {
     groupId = rootProject.groupId
     uploadName = rootProject.uploadName
     publishVersion = rootProject.publishVersion
-    desc = rootProject.description
+    desc = rootProject.pkdesc
     website = rootProject.website
     licences = rootProject.licences
 }
